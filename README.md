@@ -78,4 +78,3 @@ Build executable:
 ```powershell
 pyinstaller devsetup.spec --noconfirm --clean
 ```
-
