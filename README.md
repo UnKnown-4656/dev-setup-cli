@@ -3,6 +3,30 @@
 DevSetup is a Windows-focused CLI to set up developer environments quickly.
 It installs tools with `winget`, updates your user PATH, and can install optional Python/Node package sets.
 
+## Easy Install (EXE)
+
+Download the latest executable from Releases:
+
+- [Download `devsetup.exe` (latest release)](https://github.com/UnKnown-4656/dev-setup-cli/releases/latest)
+
+Install steps:
+
+1. Download `devsetup.exe` from the release page.
+2. Run it once in a terminal:
+
+```powershell
+.\devsetup.exe --help
+```
+
+3. The app self-registers and adds itself to your user PATH.
+4. Open a new terminal and run:
+
+```powershell
+devsetup --help
+```
+
+Note: If no release is published yet, use the source build steps in this README.
+
 ## Highlights
 
 - Install curated tool stacks with one command
