@@ -1,5 +1,5 @@
 """Terminal colour helpers — auto-enables ANSI on Windows."""
-import ctypes, sys
+import ctypes
 
 def enable_ansi():
     try:
@@ -30,7 +30,7 @@ def sep():      print(f"  {DM}{'-'*46}{R}")
 
 BANNER = f"""
 {CY}{B}+--------------------------------------------+
-|              DevSetup  v3.1                |
+|              DevSetup  v3.2                |
 |     Windows Developer Environment Manager   |
 +--------------------------------------------+{R}
 """

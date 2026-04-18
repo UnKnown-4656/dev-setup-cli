@@ -1,5 +1,5 @@
 """
-DevSetup v3.1
+DevSetup v3.2
 One-command developer environment installer for Windows.
 
 First run  -> copies itself to C:\\DevSetup and adds to PATH (no UAC on future runs)
@@ -11,6 +11,7 @@ import os
 import shutil
 import sys
 import subprocess
+from logger import log_event
 
 # ── Self-registration ─────────────────────────────────────────────────────────
 # Runs once: copies the exe to C:\DevSetup\ and adds it to USER path.
@@ -79,10 +80,12 @@ def self_install():
         added = add_to_path(INSTALL_DIR)
         if added:
             ok(f"PATH <- {INSTALL_DIR}  (devsetup now works from any terminal)")
+            warn("Restart terminal to apply PATH changes")
     elif target_exe == FALLBACK_EXE:
         added = add_to_path(FALLBACK_DIR)
         if added:
             ok(f"PATH <- {FALLBACK_DIR}  (devsetup now works from any terminal)")
+            warn("Restart terminal to apply PATH changes")
 
     # If launched from a non-installed path, hand over to installed EXE once.
     if target_exe and os.path.abspath(sys.executable).lower() != target_exe.lower():
@@ -95,7 +98,7 @@ def self_install():
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="devsetup",
-        description="DevSetup v3.1 - Windows developer environment manager",
+        description="DevSetup v3.2 - Windows developer environment manager",
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=(
             "Examples:\n"
@@ -103,12 +106,15 @@ def build_parser() -> argparse.ArgumentParser:
             "  devsetup setup python  --pip ai_ml\n"
             "  devsetup setup node    --npm react\n"
             "  devsetup setup fullstack --pip web --npm fullstack\n"
+            "  devsetup setup rust --dry-run\n"
+            "  devsetup explain backend\n"
+            "  devsetup doctor --check rust path --fix-deps\n"
             "  devsetup list\n"
             "  devsetup list-reqs\n"
             '  devsetup add-path "C:\\MyTool\\bin"\n'
         ),
     )
-    p.add_argument("--version", action="version", version="DevSetup v3.1")
+    p.add_argument("--version", action="version", version="DevSetup v3.2")
     sub = p.add_subparsers(dest="command", required=True)
 
     s = sub.add_parser("setup",     help="Install a dev stack")
@@ -126,9 +132,59 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="DIR",
         help="Project directory when using --npm-scope project (must contain package.json)",
     )
+    s.add_argument(
+        "--no-doctor",
+        action="store_true",
+        help="Skip post-install dependency checks",
+    )
+    s.add_argument(
+        "--fix-deps",
+        action="store_true",
+        help="Automatically try to fix missing dependencies during doctor checks",
+    )
+    s.add_argument(
+        "--yes",
+        action="store_true",
+        help="Assume yes for dependency-fix prompts when possible",
+    )
+    s.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show planned actions without applying changes",
+    )
+    s.add_argument(
+        "--verify",
+        action="store_true",
+        help="Run strict post-setup verification checks",
+    )
 
     sub.add_parser("list",          help="Show all available stacks")
+    ex = sub.add_parser("explain",  help="Explain a stack and recommended package sets")
+    ex.add_argument("stack",        help="Stack name to explain")
     sub.add_parser("list-reqs",     help="Show all pip / npm library sets")
+    d = sub.add_parser("doctor",    help="Check toolchain health and missing dependencies")
+    d.add_argument(
+        "--check",
+        choices=["rust", "python", "node", "git", "cpp", "r", "path", "all"],
+        nargs="+",
+        default=["all"],
+        help="Select checks to run (default: all)",
+    )
+    d.add_argument(
+        "--fix-deps",
+        action="store_true",
+        help="Automatically try to fix missing dependencies",
+    )
+    d.add_argument(
+        "--fix-suggestions",
+        action="store_true",
+        help="Show fix suggestions only (default behavior)",
+    )
+    d.add_argument(
+        "--yes",
+        action="store_true",
+        help="Assume yes for dependency-fix prompts when possible",
+    )
 
     ap = sub.add_parser("add-path", help="Add a directory to user PATH permanently")
     ap.add_argument("directory",    help="Full path to add, e.g. C:\\MyTool\\bin")
@@ -145,8 +201,8 @@ def main():
 
     # 3. Route to manager
     from manager import SetupManager
-    from pathutil import add_to_path, ensure_paths_for
-    from colours  import ok, BANNER
+    from pathutil import add_to_path
+    from colours  import ok
 
     mgr = SetupManager()
 
@@ -161,20 +217,38 @@ def main():
             npm_req=args.npm,
             npm_scope=args.npm_scope,
             project_dir=args.project_dir,
+            run_doctor=not args.no_doctor,
+            fix_deps=args.fix_deps,
+            assume_yes=args.yes,
+            dry_run=args.dry_run,
+            verify=args.verify,
         )
 
     elif args.command == "list":
         mgr.list_stacks()
 
+    elif args.command == "explain":
+        mgr.explain_stack(args.stack)
+
     elif args.command == "list-reqs":
         mgr.list_reqs()
+
+    elif args.command == "doctor":
+        checks = set(args.check)
+        if "all" in checks:
+            checks = {"rust", "python", "node", "git", "cpp", "r", "path"}
+        mgr.run_doctor(checks, fix_deps=args.fix_deps, assume_yes=args.yes)
 
     elif args.command == "add-path":
         d = args.directory.strip().strip('"')
         if add_to_path(d):
             ok(f"Added to PATH: {d}")
+            from colours import warn
+            warn("Restart terminal to apply PATH changes")
+            log_event(f"ADD_PATH_OK {d}")
         else:
             ok(f"Already in PATH: {d}")
+            log_event(f"ADD_PATH_SKIPPED {d}")
 
 
 if __name__ == "__main__":
