@@ -1,29 +1,31 @@
 # DevSetup CLI
 
-`DevSetup` is a Windows-first developer environment bootstrap CLI.
-It installs curated toolchains, manages user-level PATH updates, and optionally installs Python and Node package sets.
+DevSetup is a Windows-focused CLI to set up developer environments quickly.
+It installs tools with `winget`, updates your user PATH, and can install optional Python/Node package sets.
 
-## Key Features
+## Highlights
 
-- Installs role-based tool stacks using `winget`
-- Updates user PATH safely through `HKEY_CURRENT_USER\Environment`
-- Supports Python package sets via `--pip <set>`
-- Supports Node package sets via `--npm <set>` with `global` or `project` scope
-- Provides clear discovery commands (`list`, `list-reqs`)
+- Install curated tool stacks with one command
+- Add required tool paths to your user PATH automatically
+- Install Python package sets with `--pip`
+- Install Node package sets with `--npm`
+- Discover available stacks and requirement sets from the CLI
 
-## Security and Runtime Behavior
+## Important Behavior (Clear Version)
 
-- No system PATH modifications
-- No automatic privilege escalation
-- No destructive system operations
-- Non-install commands remain non-admin by design
+- DevSetup updates **user PATH** only (`HKEY_CURRENT_USER\Environment`)
+- DevSetup does **not** edit **system PATH** (`HKEY_LOCAL_MACHINE`)
+- DevSetup does **not** force automatic UAC/admin relaunch
+- Commands like `list`, `list-reqs`, and `add-path` are normal non-admin operations
+
+This means tools can still work immediately for your account (after opening a new terminal), without making machine-wide PATH changes.
 
 ## Command Reference
 
-- `setup <stack>`: install stack tools and optional package sets
-- `list`: show available stacks
-- `list-reqs`: show available `pip` and `npm` package sets
-- `add-path <directory>`: add a directory to user PATH
+- `devsetup setup <stack>`: install stack tools
+- `devsetup list`: show all available stacks
+- `devsetup list-reqs`: show all `pip` and `npm` package sets
+- `devsetup add-path <directory>`: add directory to user PATH
 
 ## Quick Start
 
@@ -33,41 +35,47 @@ python .\devsetup.py setup python
 python .\devsetup.py setup fullstack --pip web --npm fullstack
 ```
 
-## Stack Model
+## Stack Design
 
-Stacks are intentionally tool-focused. Package ecosystems are handled separately through `--pip` and `--npm`.
+Stacks are tool-focused. Language libraries are managed separately with `--pip` and `--npm`.
 
 ### PHP Profiles
 
-- `php_cli`: CLI-focused PHP development (`PHP + Composer`)
-- `php_web`: local web development profile (`XAMPP`)
+- `php_cli`: PHP CLI + Composer workflow
+- `php_web`: XAMPP-based local web workflow
 
-### Requirement Sets (Not Stacks)
+### Requirement Sets (Not Stack Names)
 
-- `ai_ml` and `llm` are Python package sets, not stack names
-- Example: `python .\devsetup.py setup python --pip ai_ml`
+`ai_ml` and `llm` are Python package sets, not stacks.
 
-## Package Set Usage
+Use:
 
 ```powershell
-# Python package set
+python .\devsetup.py setup python --pip ai_ml
+python .\devsetup.py setup python --pip llm
+```
+
+## Package Set Examples
+
+```powershell
+# Python set
 python .\devsetup.py setup python --pip ai_ml
 
-# npm package set, global scope
+# npm set (global)
 python .\devsetup.py setup node --npm react --npm-scope global
 
-# npm package set, project scope
+# npm set (project)
 python .\devsetup.py setup node --npm express --npm-scope project --project-dir "D:\work\api"
 ```
 
-`--npm-scope` values:
+`--npm-scope` options:
 
-- `global` (default): installs with `npm install -g`
+- `global` (default): runs `npm install -g`
 - `project`: requires `--project-dir` containing `package.json`
 
-## Development and Build
+## Build and Validation
 
-Validate syntax:
+Run syntax checks:
 
 ```powershell
 python -m py_compile devsetup.py manager.py installer.py stacks.py pathutil.py colours.py
