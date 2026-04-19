@@ -477,56 +477,17 @@ Not yet — it's on the roadmap.
 DevSetup stops, logs the failure, and tells you which tool failed. Run `devset doctor --fix-deps` to attempt auto-fix, or check `devsetup-log.txt` for the full error.
 
 ---
-## Problem Might face and fix
-The Problem:
-`C:\Users\user>devset setup r --fix-deps
-
-+--------------------------------------------+
-|              DevSetup  v3.2                |
-|     Windows Developer Environment Manager   |
-+--------------------------------------------+
-
-
-  Stack  :  R
-  About  :  R development environment
-  Tools  :  R, VS Code, Git
-  ----------------------------------------------
-  [1/3] R
-
-  [>]  Installing R
-Found an existing package already installed. Trying to upgrade the installed package...
-No available upgrade found.
-No newer package versions are available from the configured sources.
-  [X]   Command failed (exit=2316632107): winget install -e --id RProject.R --accept-package-agreements --accept-source-agreements --silent
-    Hint: Try manually: winget install -e --id RProject.R
-  [2/3] VS Code
-  [OK]  VS Code already installed
-  [!]  VS Code command exists but version check could not be parsed
-    The tool appears to be installed. Version output may be non-standard.
-  [3/3] Git
-  [OK]  Git already installed
-  [OK]  Verified Git (git version 2.53.0.windows.2)
-  ----------------------------------------------
-  [X]   Setup stopped: one or more tools failed to install
-  Failed tools: R
-  See devsetup-log.txt for details.
-`
-Fix:
-'
-C:\Users\user>devset doctor --check r
-
-  Running DevSet doctor...
+## Problem: installed but not detected
+stack installed but not found in PATH
+But installed at: C:\Program Files\xxxxx
+## Cause:
+stack is installed successfully but PATH not updated
+## Solution:
+`devset doctor --check <stack>`
+or
+`devset setup <stack> --fix-deps`
 
 
-  [>]  Doctor check: R toolchain
-  [!]  R / Rscript not found in PATH
-  R installation detected at: C:\Program Files\R\R-4.5.3\bin\x64
-  But it is NOT in your PATH — that's why it's not detected.
-  [?] Add R to your PATH now? [Y/n]: y
-  [OK]  R paths already in PATH (restart terminal to apply)
-
-  Doctor summary: 1 ok, 1 warnings, 0 failures
-'
 <div align="center">
 
 Built for developers tired of fixing PATH at 2AM.
