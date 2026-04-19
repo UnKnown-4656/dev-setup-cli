@@ -320,7 +320,7 @@ class LibraryInstaller:
             dim(f"  [dry-run] {sys.executable} -m pip install --upgrade --quiet {' '.join(pkgs)}")
             return True
         return _run_command(
-            [sys.executable, "-m", "pip", "install", "--upgrade", "--quiet"] + pkgs,
+            ["python", "-m", "pip", "install", "--upgrade", "--quiet"] + pkgs,
             hint="Verify internet connection and Python/pip availability.",
         )
 
@@ -330,7 +330,7 @@ class LibraryInstaller:
             self._list_npm()
             return False
         pkgs = self.NPM[req]
-        base_cmd = ["npm", "install"]
+        base_cmd = ["npm.cmd", "install"]
         if scope == "global":
             base_cmd.append("-g")
         elif scope == "project":

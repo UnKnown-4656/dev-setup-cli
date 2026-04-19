@@ -18,9 +18,9 @@ from logger import log_event
 # User PATH writes need NO admin rights — so no UAC on subsequent runs.
 
 INSTALL_DIR = r"C:\DevSetup"
-INSTALL_EXE = os.path.join(INSTALL_DIR, "devsetup.exe")
+INSTALL_EXE = os.path.join(INSTALL_DIR, "devset.exe")
 FALLBACK_DIR = os.path.join(os.environ.get("APPDATA", os.path.expanduser("~")), "DevSetup")
-FALLBACK_EXE = os.path.join(FALLBACK_DIR, "devsetup.exe")
+FALLBACK_EXE = os.path.join(FALLBACK_DIR, "devset.exe")
 
 
 def _is_frozen() -> bool:
@@ -97,21 +97,21 @@ def self_install():
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="devsetup",
+        prog="devset",
         description="DevSetup v3.2 - Windows developer environment manager",
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  devsetup setup python\n"
-            "  devsetup setup python  --pip ai_ml\n"
-            "  devsetup setup node    --npm react\n"
-            "  devsetup setup fullstack --pip web --npm fullstack\n"
-            "  devsetup setup rust --dry-run\n"
-            "  devsetup explain backend\n"
-            "  devsetup doctor --check rust path --fix-deps\n"
-            "  devsetup list\n"
-            "  devsetup list-reqs\n"
-            '  devsetup add-path "C:\\MyTool\\bin"\n'
+            "  devset setup python\n"
+            "  devset setup python  --pip ai_ml\n"
+            "  devset setup node    --npm react\n"
+            "  devset setup fullstack --pip web --npm fullstack\n"
+            "  devset setup rust --dry-run\n"
+            "  devset explain backend\n"
+            "  devset doctor --check rust path --fix-deps\n"
+            "  devset list\n"
+            "  devset list-reqs\n"
+            '  devset add-path "C:\\MyTool\\bin"\n'
         ),
     )
     p.add_argument("--version", action="version", version="DevSetup v3.2")

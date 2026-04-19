@@ -40,12 +40,12 @@ class SetupManager:
             if suggested_pip:
                 fail(
                     f"'{stack}' is a Python requirement set, not a tool stack.\n"
-                    f"  Use: devsetup setup {target_stack} --pip {suggested_pip}"
+                    f"  Use: devset setup {target_stack} --pip {suggested_pip}"
                 )
             else:
                 fail(
                     f"'{stack}' was replaced.\n"
-                    f"  Use: devsetup setup {target_stack}"
+                    f"  Use: devset setup {target_stack}"
                 )
             return
 
@@ -157,7 +157,7 @@ class SetupManager:
             print()
             warn("Some tools have warnings. To resolve:")
             print(f"  {DM}  1. Open a new terminal (to pick up PATH changes){R}")
-            print(f"  {DM}  2. Run: devsetup doctor  (to re-verify){R}")
+            print(f"  {DM}  2. Run: devset doctor  (to re-verify){R}")
             print(f"  {DM}  3. Or run: refreshenv  (if using Chocolatey){R}")
         else:
             print(f"  {DM}Open a new terminal to use updated PATH changes.{R}")
@@ -184,8 +184,8 @@ class SetupManager:
             names = ", ".join(t.name for t in meta.tools)
             print(f"    {CY}{name:<14}{R}  {DM}{meta.description}{R}")
             print(f"    {DM}{' '*16}{names}{R}")
-        print(f"\n  {B}Usage:{R}  devsetup setup <stack>  [--pip <set>]  [--npm <set>]")
-        print(f"  {B}Tip  :{R}  devsetup list-reqs\n")
+        print(f"\n  {B}Usage:{R}  devset setup <stack>  [--pip <set>]  [--npm <set>]")
+        print(f"  {B}Tip  :{R}  devset list-reqs\n")
 
     def list_reqs(self):
         self.libs.list_all()

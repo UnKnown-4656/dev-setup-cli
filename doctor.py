@@ -264,7 +264,7 @@ class Doctor:
                     works for EVERY stack without manual mapping.
         """
         checks = checks or {"rust", "python", "node", "git", "cpp", "r", "path"}
-        print(f"\n  {B}Running DevSetup doctor...{R}\n")
+        print(f"\n  {B}Running DevSet doctor...{R}\n")
 
         # Run specialized checks
         if "rust" in checks:
