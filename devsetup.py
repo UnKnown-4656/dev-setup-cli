@@ -1,10 +1,4 @@
-"""
-DevSetup v3.2
-One-command developer environment installer for Windows.
 
-First run  -> copies itself to C:\\DevSetup and adds to PATH (no UAC on future runs)
-Every run  -> normal CLI, no extra prompts
-"""
 
 import argparse
 import os
@@ -13,9 +7,6 @@ import sys
 import subprocess
 from logger import log_event
 
-# ── Self-registration ─────────────────────────────────────────────────────────
-# Runs once: copies the exe to C:\DevSetup\ and adds it to USER path.
-# User PATH writes need NO admin rights — so no UAC on subsequent runs.
 
 INSTALL_DIR = r"C:\DevSetup"
 INSTALL_EXE = os.path.join(INSTALL_DIR, "devset.exe")
@@ -29,7 +20,7 @@ def _is_frozen() -> bool:
 
 def _already_installed() -> bool:
     if not _is_frozen():
-        return True   # running as .py in dev, skip
+        return True  
     current_exe = os.path.abspath(sys.executable).lower()
     return current_exe in {INSTALL_EXE.lower(), FALLBACK_EXE.lower()}
 
@@ -39,7 +30,7 @@ def _relaunch_installed(target_exe: str) -> None:
     try:
         subprocess.Popen([target_exe] + sys.argv[1:])
     except Exception:
-        # If relaunch fails, keep current process alive so command still runs.
+
         return
     sys.exit(0)
 
@@ -62,7 +53,7 @@ def self_install():
         ok(f"DevSetup installed -> {INSTALL_EXE}")
         target_exe = INSTALL_EXE
     except PermissionError:
-        # C:\ may need elevation — fall back to user's AppData
+
         try:
             os.makedirs(FALLBACK_DIR, exist_ok=True)
             shutil.copy2(sys.executable, FALLBACK_EXE)
@@ -87,10 +78,10 @@ def self_install():
             ok(f"PATH <- {FALLBACK_DIR}  (devsetup now works from any terminal)")
             warn("Restart terminal to apply PATH changes")
 
-    # If launched from a non-installed path, hand over to installed EXE once.
+
     if target_exe and os.path.abspath(sys.executable).lower() != target_exe.lower():
         _relaunch_installed(target_exe)
-    # No broadcast needed — pathutil.add_to_path already broadcasts
+
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
@@ -193,13 +184,10 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main():
-    # 1. Self-register on first launch (no UAC needed)
     self_install()
 
-    # 2. Parse args early so we know the command
     args = build_parser().parse_args()
 
-    # 3. Route to manager
     from manager import SetupManager
     from pathutil import add_to_path
     from colours  import ok
