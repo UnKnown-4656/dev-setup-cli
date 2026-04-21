@@ -30,7 +30,7 @@ def sep():      print(f"  {DM}{'-'*46}{R}")
 
 BANNER = f"""
 {CY}{B}+--------------------------------------------+
-|              DevSetup  v3.2                |
+|              DevSetup  v1                   |
 |     Windows Developer Environment Manager   |
 +--------------------------------------------+{R}
 """
