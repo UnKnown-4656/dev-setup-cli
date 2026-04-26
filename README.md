@@ -47,8 +47,8 @@ devset setup python --pip ai_ml
 [![Version](https://img.shields.io/badge/version-3.2-brightgreen?style=flat-square)](https://github.com)
 [![Stacks](https://img.shields.io/badge/stacks-50-orange?style=flat-square)](https://github.com)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square)](LICENSE)
-[![Issues](https://img.shields.io/github/issues/YOUR_USERNAME/devsetup?style=flat-square)](https://github.com/YOUR_USERNAME/devsetup/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](https://github.com/YOUR_USERNAME/devsetup/pulls)
+[![Issues](https://img.shields.io/github/issues/YOUR_USERNAME/devsetup?style=flat-square)](https://github.com/UnKnown-4656/dev-setup-cli/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](https://github.com/UnKnown-4656/dev-setup-cli/pulls)
 
 > ⭐ If this saved you time, consider starring the repo — it helps others find it.
 
@@ -415,7 +415,7 @@ Contributions are welcome — the codebase is intentionally modular so you can c
 **Getting started:**
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/devsetup
+git clone https://github.com/UnKnown-4656/dev-setup-cli
 cd devsetup
 python devsetup.py list   # verify it runs
 ```
